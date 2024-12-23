@@ -1,4 +1,4 @@
-const Blog = require("../models/Blog");
+const Blog = require("../models/blog.model");
 const mongoose = require("mongoose");
 
 // Create a new blog post
