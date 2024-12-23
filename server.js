@@ -13,7 +13,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-
 // MongoDB Connection
 mongoose
   .connect(process.env.MONGO_URI, {
@@ -31,10 +30,12 @@ app.get("/", (req, res) => {
 // Routes
 const authRoutes = require("./routes/auth.routes");
 const trainingRoutes = require("./routes/training.routes");
-
+const blogRoutes = require("./routes/blogRoutes.routes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/training", trainingRoutes);
+app.use("/api/blog", blogRoutes);
+
 
 // Server Listening
 const PORT = process.env.PORT || 5000;
