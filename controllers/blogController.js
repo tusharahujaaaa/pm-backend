@@ -76,7 +76,6 @@ const updateBlog = async (req, res) => {
   const id = req?.params?.id;
   const { title, content, tags, images, publishedDate, createdBy } = req?.body;
   const user = req?.user;
-  console.log(req?.body?.delete);
   if (req?.body?.delete) {
     try {
       const blog = await Blog?.findByIdAndUpdate(id, {
@@ -119,11 +118,16 @@ const updateBlog = async (req, res) => {
 
 // Search Blog
 const searchBlog = async (req, res) => {
-  const { search } = req?.body;
-  console.log(search);
-  
-}
-
+  try {
+    const search = req?.body;
+    const blogs = await Blog.find({
+      title: { $regex: search?.title, $options: "i" },
+    });
+    res.status(200).json({ message: "Blogs Fetched Successfully", blogs });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
 
 module.exports = {
   createBlog,

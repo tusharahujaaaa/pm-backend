@@ -29,21 +29,21 @@ router.get("/", getAllBlogs);
  * @desc Get a single blog by ID
  * @access Public
  */
-router.get("/:id", getBlogById);
+router.get("/post/:id", getBlogById);
 
 /**
  * @route Post /api/blog/:id
  * @desc Update a blog post
  * @access Private
  */
-router.post("/:id", protect, updateBlog);
+router.post("/update/:id", protect, updateBlog);
 
 /**
  * @route Post /api/blog/search
  * @desc Search a blog post
  * @access Private
- */
-router.post("/search", protect, searchBlog);
+*/
+router.post("/search",  searchBlog);
 
 // /**
 //  * @route Post /api/blog/:id
