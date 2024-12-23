@@ -76,6 +76,9 @@ const updateBlog = async (req, res) => {
   const id = req?.params?.id;
   const { title, content, tags, images, publishedDate, createdBy } = req?.body;
   const user = req?.user;
+  if (user?._id != createdBy) {
+    return res.status(401).json({message: "You are not authorized to update this blog"});
+  }
   if (req?.body?.delete) {
     try {
       const blog = await Blog?.findByIdAndUpdate(id, {
