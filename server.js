@@ -30,12 +30,13 @@ app.get("/", (req, res) => {
 // Routes
 const authRoutes = require("./routes/auth.routes");
 const trainingRoutes = require("./routes/training.routes");
-const blogRoutes = require("./routes/blogRoutes.routes");
+const blogRoutes = require("./routes/blog.routes");
+const commentRoutes = require("./routes/comment.route");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/training", trainingRoutes);
 app.use("/api/blog", blogRoutes);
-
+app.use("/api/comment", commentRoutes);
 
 // Server Listening
 const PORT = process.env.PORT || 5000;
