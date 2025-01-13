@@ -23,8 +23,10 @@ const blogSchema = new mongoose.Schema(
       type: mongoose?.Schema?.Types?.ObjectId,
       ref: "User",
       required: true,
-        },
+    },
     search: { type: String, required: false },
+    comments: { type: Number, default: 0 }, // Ensure this field exists
+    likes: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
