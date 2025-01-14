@@ -21,7 +21,7 @@ const createBlog = async (req, res) => {
       publishedDate,
       author: user._id,
       createdBy: user?._id,
-      updatedBy: user?._id,
+      // updatedBy: user?._id,
     });
     res.status(201).json({ message: "Blog Created Successfully", blog });
   } catch (error) {
@@ -74,10 +74,15 @@ const getBlogById = async (req, res) => {
 // Update a blog post
 const updateBlog = async (req, res) => {
   const id = req?.params?.id;
+  const userCreated = await Blog.findById(id);
   const { title, content, tags, images, publishedDate, createdBy } = req?.body;
   const user = req?.user;
-  if (user?._id != createdBy) {
-    return res.status(401).json({message: "You are not authorized to update this blog"});
+  console.log(user?._id , userCreated?.createdBy);
+  
+  if (user?._id != userCreated?.createdBy) {
+    return res
+      .status(401)
+      .json({ message: "You are not authorized to update this blog" });
   }
   if (req?.body?.delete) {
     try {
