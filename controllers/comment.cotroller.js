@@ -5,7 +5,7 @@ const axios = require("axios");
 
 const createComment = async (req, res) => {
   try {
-    const { content, postId, author, createdBy } = req?.body;
+    const { content, postId, createdBy } = req?.body;
     if (!content || !postId) {
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -58,4 +58,24 @@ const getComment = async (req, res) => {
   }
 };
 
-module.exports = { createComment, getAllComments, getComment };
+const editComment = async (req, res) => {
+  try {
+    const commentId = req.params.id;
+    const { content, postId, author, createdBy } = req?.body;
+    const user = req.user;
+
+    const comment = await Comment.findById(commentId);
+
+    if (comment.author == user.id) {
+      await Comment.findByIdAndUpdate(commentId, {
+        content,
+        post: postId,
+      });
+      res.status(200).json({ message: "Comment Updates successfully" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
+module.exports = { createComment, getAllComments, getComment, editComment };
