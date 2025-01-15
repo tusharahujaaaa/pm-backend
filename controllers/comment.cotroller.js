@@ -61,21 +61,53 @@ const getComment = async (req, res) => {
 const editComment = async (req, res) => {
   try {
     const commentId = req.params.id;
-    const { content, postId, author, createdBy } = req?.body;
+    const { content, postId } = req.body;
+
+    if (!commentId || !content) {
+      return res.status(400).json({ message: "Invalid request data" });
+    }
+
     const user = req.user;
+    if (!user) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
 
     const comment = await Comment.findById(commentId);
-
-    if (comment.author == user.id) {
-      await Comment.findByIdAndUpdate(commentId, {
-        content,
-        post: postId,
-      });
-      res.status(200).json({ message: "Comment Updates successfully" });
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
     }
+
+    if (comment.author.toString() !== user.id) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to edit this comment" });
+    }
+
+    const updateData = { content, updatedAt: new Date() };
+    if (postId) {
+      updateData.post = postId; // Optional: Only update if explicitly provided
+    }
+
+    const updatedComment = await Comment.findByIdAndUpdate(
+      commentId,
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedComment) {
+      return res.status(500).json({ message: "Failed to update comment" });
+    }
+
+    res
+      .status(200)
+      .json({
+        message: "Comment updated successfully",
+        comment: updatedComment,
+      });
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
+
 
 module.exports = { createComment, getAllComments, getComment, editComment };
